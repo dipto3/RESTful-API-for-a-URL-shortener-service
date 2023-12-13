@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\V1\ShortenUrlController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/{shortened_url_code}', [ShortenUrlController::class, 'redirectToMainUrl'])->name('short.link');
