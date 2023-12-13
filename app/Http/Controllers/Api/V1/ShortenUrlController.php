@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UrlResource;
 use App\Models\Url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,17 +18,23 @@ class ShortenUrlController extends Controller
         ]);
         $requestUrl = $request->long_url;
         $url = Url::where('long_url', $requestUrl)->first();
-        $sc = Str::random(6);
-        if (! $url) {
+        $shortCode = Str::random(6);
+        if (!$url) {
             $url = Url::create([
                 'long_url' => $requestUrl,
-                'shortened_url_code' => $sc,
+                'shortened_url_code' => $shortCode,
                 'user_id' => Auth::user()->id,
-                'total_visit' => 1,
+                'total_visit' => 0,
             ]);
-            $url = Url::where('shortened_url_code', $sc)->first();
+            $url = Url::where('shortened_url_code', $shortCode)->first();
         }
-
         return response()->json(['message' => 'Shortend URL genarated!', 'shortened_url_code' => url($url->shortened_url_code)]);
+    }
+
+    public function list()
+    {
+        $loggedInUser = Auth::user()->id;
+        $urls =  Url::where('user_id', $loggedInUser)->get();
+        return response()->json(UrlResource::collection($urls));
     }
 }
