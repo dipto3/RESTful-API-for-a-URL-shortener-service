@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-
 class AuthController extends Controller
 {
     public function store(RegisterRequest $request)
@@ -17,9 +16,10 @@ class AuthController extends Controller
         $request->validated();
         $user = User::create([
             'name' => $request->name,
-            'email' =>  $request->email,
-            'password' => Hash::make($request->password)
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
+
         return response()->json(['success' => true, 'user' => $user]);
     }
 
@@ -27,15 +27,16 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        if (!Auth::attempt(request(['email', 'password']))) {
+        if (! Auth::attempt(request(['email', 'password']))) {
             return response()->json(['message' => 'Unauthorized User'], 401);
         }
         $token = $request->user()->createToken('Access token');
+
         return response()->json([
-            'accessToken' => $token->plainTextToken
+            'accessToken' => $token->plainTextToken,
         ]);
     }
 }
