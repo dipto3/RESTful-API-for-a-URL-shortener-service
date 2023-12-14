@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Controllers\Api\V1\ShortenUrlController;
+
+use App\Http\Controllers\Api\V2\ShortenUrlController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-|Version-1 API Routes
+| Version-2 API Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -15,10 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->group(function () {
-    Route::post('/registration', [AuthController::class, 'store']);
-    Route::post('/login', [AuthController::class, 'login']);
-
+Route::prefix('v2')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/shorten-url', [ShortenUrlController::class, 'store']);
         Route::get('/url-lists', [ShortenUrlController::class, 'list']);

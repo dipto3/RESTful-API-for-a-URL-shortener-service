@@ -12,5 +12,6 @@ class Url extends Model
         'long_url',
         'shortened_url_code',
         'user_id',
+        'total_visit',
     ];
 }
