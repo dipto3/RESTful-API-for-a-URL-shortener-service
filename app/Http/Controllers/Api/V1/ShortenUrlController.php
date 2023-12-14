@@ -7,6 +7,7 @@ use App\Http\Resources\V1\UrlResource;
 use App\Models\Url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ShortenUrlController extends Controller
@@ -17,7 +18,8 @@ class ShortenUrlController extends Controller
             'long_url' => 'required|url',
         ]);
         $requestUrl = $request->long_url;
-        $url = Url::where('long_url', $requestUrl)->first();
+        $loggedInUser = Auth::user()->id;
+        $url = Url::where('user_id', $loggedInUser)->where('long_url', $requestUrl)->first();
         $shortCode = Str::random(6);
         if (!$url) {
             $url = Url::create([
@@ -32,8 +34,10 @@ class ShortenUrlController extends Controller
 
     public function list()
     {
-        $loggedInUser = Auth::user()->id;
-        $urls =  Url::where('user_id', $loggedInUser)->get();
-        return response()->json(UrlResource::collection($urls));
+
+        return UrlResource::collection(Cache::remember('urls', 60 * 60 * 24, function () {
+            $urls = Url::where('user_id', Auth::user()->id)->get();
+            return  $urls;
+        }));
     }
 }

@@ -19,5 +19,7 @@ Route::prefix('v2')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/shorten-url', [ShortenUrlController::class, 'store']);
         Route::get('/url-lists', [ShortenUrlController::class, 'list']);
+
+      
     });
 });
