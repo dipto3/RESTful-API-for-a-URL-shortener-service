@@ -8,10 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Url extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'long_url',
         'shortened_url_code',
         'user_id',
         'total_visit',
     ];
+    public function visitor()
+    {
+        return $this->hasMany(VisitorCount::class,'url_id','id');
+    }
 }

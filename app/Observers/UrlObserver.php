@@ -18,5 +18,4 @@ class UrlObserver
     /**
      * Handle the Url "updated" event.
      */
-   
 }

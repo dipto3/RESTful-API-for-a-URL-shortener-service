@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\UrlResource;
+use App\Models\Url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
-use App\Models\Url;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class ShortenUrlController extends Controller
 {
     public function store(Request $request)
     {
+
         $request->validate([
             'long_url' => 'required|url',
         ]);
@@ -26,20 +27,29 @@ class ShortenUrlController extends Controller
                 'long_url' => $requestUrl,
                 'shortened_url_code' => $shortCode,
                 'user_id' => $loggedInUser,
-                'total_visit' => 0
+                'total_visit' => 0,
             ]);
             $url = Url::where('shortened_url_code', $shortCode)->first();
         }
+
         return response()->json(['message' => 'Shortend URL genarated!', 'shortened_url_code' => url($url->shortened_url_code)]);
     }
 
     public function list()
     {
-        return UrlResource::collection(Cache::remember('urls', 60*60*24, function () {
+        return UrlResource::collection(Cache::remember('urls', 60 * 60 * 24, function () {
             $urls = Url::where('user_id', Auth::user()->id)->get();
-            return  $urls;
+
+            return $urls;
+          
         }));
+       
     }
 
-   
+    public function urlVisitorCounts()
+    {
+        $urlVisitorCounts = Url::where('user_id', Auth::user()->id)->withCount('visitor')->get();
+
+        return response()->json(['url_visitor_counts' => $urlVisitorCounts]);
+    }
 }

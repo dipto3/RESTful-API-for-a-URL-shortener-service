@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\Api\V2\ShortenUrlController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +18,6 @@ Route::prefix('v2')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/shorten-url', [ShortenUrlController::class, 'store']);
         Route::get('/url-lists', [ShortenUrlController::class, 'list']);
-
-      
+        Route::get('/count', [ShortenUrlController::class, 'urlVisitorCounts']);
     });
 });
