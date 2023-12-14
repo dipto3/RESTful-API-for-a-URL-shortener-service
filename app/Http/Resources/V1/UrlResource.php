@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -19,8 +19,6 @@ class UrlResource extends JsonResource
             'user_id' => $this->user_id,
             'long_url' => $this->long_url,
             'shortened_url' => url($this->shortened_url_code),
-            'total_visit' => $this->total_visit
-
         ];
     }
 }

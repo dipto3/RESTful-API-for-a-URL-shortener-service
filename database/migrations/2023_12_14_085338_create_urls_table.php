@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('long_url');
             $table->string('shortened_url_code')->unique();
             $table->string('user_id');
-            $table->string('total_visit');
             $table->timestamps();
         });
     }

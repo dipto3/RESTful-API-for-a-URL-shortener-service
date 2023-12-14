@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UrlResource;
+use App\Http\Resources\V1\UrlResource;
 use App\Models\Url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +24,6 @@ class ShortenUrlController extends Controller
                 'long_url' => $requestUrl,
                 'shortened_url_code' => $shortCode,
                 'user_id' => Auth::user()->id,
-                'total_visit' => 0,
             ]);
             $url = Url::where('shortened_url_code', $shortCode)->first();
         }
