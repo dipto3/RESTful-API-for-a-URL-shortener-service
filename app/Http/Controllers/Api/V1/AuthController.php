@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Services\ApiAuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -12,14 +13,15 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    protected $apiAuthService;
+    public function __construct(ApiAuthService $apiAuthService)
+    {
+        $this->apiAuthService = $apiAuthService;
+    }
     public function store(RegisterRequest $request)
     {
         $request->validated();
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user =  $this->apiAuthService->store($request);
 
         return response()->json(['success' => true, 'user' => $user]);
     }
@@ -30,11 +32,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
-        if (!Auth::attempt(request(['email', 'password']))) {
-            return response()->json(['message' => 'Unauthorized User'], 401);
-        }
-        $token = $request->user()->createToken('Access token');
+        $token =  $this->apiAuthService->login($request);
         Cache::flush();
         return response()->json([
             'accessToken' => $token->plainTextToken,
