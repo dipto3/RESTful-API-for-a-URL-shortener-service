@@ -37,7 +37,6 @@ class ShortenUrlController extends Controller
     {
         return UrlResource::collection(Cache::remember('urls', 60 * 60 * 24, function () {
             $urls = Url::where('user_id', Auth::user()->id)->get();
-
             return $urls;
         }));
     }

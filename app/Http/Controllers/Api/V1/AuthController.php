@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -30,11 +31,11 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (! Auth::attempt(request(['email', 'password']))) {
+        if (!Auth::attempt(request(['email', 'password']))) {
             return response()->json(['message' => 'Unauthorized User'], 401);
         }
         $token = $request->user()->createToken('Access token');
-
+        Cache::flush();
         return response()->json([
             'accessToken' => $token->plainTextToken,
         ]);
