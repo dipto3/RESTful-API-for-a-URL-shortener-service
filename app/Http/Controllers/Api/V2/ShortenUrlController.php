@@ -45,11 +45,4 @@ class ShortenUrlController extends Controller
         }));
        
     }
-
-    public function urlVisitorCounts()
-    {
-        $urlVisitorCounts = Url::where('user_id', Auth::user()->id)->withCount('visitor')->get();
-
-        return response()->json(['url_visitor_counts' => $urlVisitorCounts]);
-    }
 }
