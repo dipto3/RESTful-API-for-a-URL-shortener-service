@@ -27,7 +27,6 @@ class ShortenUrlController extends Controller
                 'long_url' => $requestUrl,
                 'shortened_url_code' => $shortCode,
                 'user_id' => $loggedInUser,
-                'total_visit' => 0,
             ]);
             $url = Url::where('shortened_url_code', $shortCode)->first();
         }

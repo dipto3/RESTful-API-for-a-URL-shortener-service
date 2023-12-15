@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('visitor_counts', function (Blueprint $table) {
             $table->id();
-            $table->string('url_id');
+            $table->unsignedBigInteger('url_id');
+            $table->foreign('url_id')->references('id')->on('urls')->onDelete('cascade');
             $table->string('ip');
             $table->timestamps();
         });
